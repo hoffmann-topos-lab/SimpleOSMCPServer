@@ -1,8 +1,8 @@
 import json
+import signal
 import subprocess
 import time
 import os
-import sys
 from datetime import datetime
 from typing import Any, Dict
 import asyncio
@@ -104,7 +104,15 @@ async def call_tool(name: str, arguments: Dict[str, Any]):
             )
         ]
 
+def shutdown(signum: int):
+    log_action({"event": "shutdown", "signal": int(signum)})
+    os._exit(0)
+
 async def main():
+    loop = asyncio.get_running_loop()
+    for sig in (signal.SIGTERM, signal.SIGINT):
+        loop.add_signal_handler(sig, shutdown, sig)
+
     async with stdio_server() as (read, write):
         await server.run(
             read,
