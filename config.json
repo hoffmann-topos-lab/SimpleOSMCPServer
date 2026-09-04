@@ -2,7 +2,7 @@
   "sandbox_dir": "./sandbox",
   "command_timeout_seconds": 30,
   "logs": {
-    "actions": "./logs/actions.log.json",
-    "errors": "./logs/errors.log.json"
+    "actions": "/app/logs/actions.log.json",
+    "errors": "/app/logs/errors.log.json"
   }
 }
