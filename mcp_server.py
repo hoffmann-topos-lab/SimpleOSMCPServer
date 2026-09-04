@@ -21,6 +21,7 @@ os.chdir(SANDBOX_DIR)
 ACTIONS_LOG = CONFIG["logs"]["actions"]
 ERRORS_LOG = CONFIG["logs"]["errors"]
 COMMAND_TIMEOUT = CONFIG.get("command_timeout_seconds", 30)
+CONTAINER = os.environ.get("HOSTNAME", "")
 
 
 os.makedirs(SANDBOX_DIR, exist_ok=True)
@@ -35,12 +36,14 @@ def _ensure_log_file(path: str):
 
 def log_action(entry: Dict[str, Any]):
     _ensure_log_file(ACTIONS_LOG)
+    entry["container"] = CONTAINER
     entry["timestamp"] = datetime.utcnow().isoformat()
     with open(ACTIONS_LOG, "a") as f:
         f.write(json.dumps(entry) + "\n")
 
 def log_error(entry: Dict[str, Any]):
     _ensure_log_file(ERRORS_LOG)
+    entry["container"] = CONTAINER
     entry["timestamp"] = datetime.utcnow().isoformat()
     with open(ERRORS_LOG, "a") as f:
         f.write(json.dumps(entry) + "\n")
